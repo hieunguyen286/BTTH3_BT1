@@ -15,7 +15,7 @@ if (isset($_POST['submit'])) {
             echo "Tài khoản đã tồn tài";
         } else {
             $password_hash = password_hash($password, PASSWORD_DEFAULT);
-            $code_hash = '123';
+            $code_hash = md5(uniqid(rand(), true));
             $sql_res = "INSERT INTO users(user_email, user_pass, user_hash) VALUES ('$email','$password','$code_hash');";
             if (mysqli_query($conn, $sql_res)) {
                 require_once 'vendor/autoload.php';
@@ -24,7 +24,7 @@ if (isset($_POST['submit'])) {
 
                 $emailServer = new MyEmailServer();
                 $emailSender = new EmailSender($emailServer);
-                $emailSender->send($email, "activation", "http://localhost/BTTH03_BT1/activate.php?email=%22.$email.%22&hash=%22.$code_hash");
+                $emailSender->send($email, "activation", "http://localhost/BTTH03_BT1/activate.php?email=".$email."&hash=".$code_hash);
 
             } else {
                 echo "Lỗi";
